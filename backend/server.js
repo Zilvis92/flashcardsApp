@@ -2,6 +2,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
 
 // 1. Inicializuojame dotenv
@@ -13,13 +14,12 @@ const app = express();
 // 3. Middleware
 app.use(express.json());
 
-// Routes 
-app.get('/', (req, res) => {
-  res.send('Flashcard App Backend veikia!');
-});
-
 // Routes user
 app.use('/api/users', userRoutes);
+
+// Error handlers
+app.use(notFound);
+app.use(errorHandler);
 
 // 3. Sukuriame serverio paleidimo funkciją
 const startServer = async () => {
