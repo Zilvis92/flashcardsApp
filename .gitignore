@@ -1,0 +1,14 @@
+# Ignoruoti priklausomybes abiejuose aplankuose
+frontend/node_modules/
+backend/node_modules/
+
+# Ignoruoti aplinkos kintamuosius (saugumas!)
+backend/.env
+.env
+
+# Ignoruoti build failus
+frontend/build/
+frontend/dist/
+
+# Kiti sistemos failai
+.DS_Store
