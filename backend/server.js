@@ -2,20 +2,24 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const userRoutes = require('./routes/userRoutes');
 
-// 1. Inicializuojame dotenv (nuskaitome .env kintamuosius)
+// 1. Inicializuojame dotenv
 dotenv.config();
 
-// Inicializuojame Express programą
+// 2. Inicializuojame Express
 const app = express();
 
-// Middleware (reikės vėliau duomenų priėmimui)
+// 3. Middleware
 app.use(express.json());
 
-// Pradinis maršrutas testavimui
+// Routes 
 app.get('/', (req, res) => {
   res.send('Flashcard App Backend veikia!');
 });
+
+// Routes user
+app.use('/api/users', userRoutes);
 
 // 3. Sukuriame serverio paleidimo funkciją
 const startServer = async () => {
