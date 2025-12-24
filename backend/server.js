@@ -1,19 +1,19 @@
 // server.js
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors');
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const userRoutes = require('./routes/userRoutes');
 const deckRoutes = require('./routes/deckRoutes');
 const cardRoutes = require('./routes/cardRoutes');
 
-// 1. Inicializuojame dotenv
+
 dotenv.config();
 
-// 2. Inicializuojame Express
 const app = express();
 
-// 3. Middleware
+app.use(cors());
 app.use(express.json());
 
 // Routes user

@@ -19,6 +19,10 @@ const cardSchema = new mongoose.Schema({
   hint: {
     type: String,
     default: ''
+  },
+  mastered: {
+      type: Boolean,
+      default: false
   }
 }, {
   timestamps: true
