@@ -45,8 +45,56 @@ const getDeckById = asyncHandler(async (req, res) => {
     res.json(deck);
 });
 
+// @desc update a deck
+// @route PUT /api/decks/:id
+// @access Private
+const updateDeck = asyncHandler(async (req, res) => {
+    const deck = await Deck.findById(req.params.id);
+
+    if (!deck) {
+        res.status(404);
+        throw new Error('Rinkinys nerastas');
+    }
+
+    if (deck.author.toString() !== req.user._id.toString()) {
+        res.status(401);
+        throw new Error('Vartotojas neautorizuotas');
+    }
+
+    const updatedDeck = await Deck.findByIdAndUpdate(
+        req.params.id,
+        req.body, // Paima pasikeitusius laukus iš užklausos
+        { new: true } // Grąžina jau atnaujintą objektą
+    );
+
+    res.json(updatedDeck);
+});
+
+// @desc delete a deck
+// @route DELETE /api/decks/:id
+// @access Private
+const deleteDeck = asyncHandler(async (req, res) => {
+    const deck = await Deck.findById(req.params.id);
+
+    if (!deck) {
+        res.status(404);
+        throw new Error('Rinkinys nerastas');
+    }
+
+    // Tikriname ar trina savininkas (tavo modelyje laukas yra 'author')
+    if (deck.author.toString() !== req.user._id.toString()) {
+        res.status(401);
+        throw new Error('Vartotojas neautorizuotas');
+    }
+
+    await deck.deleteOne();
+    res.json({ message: 'Rinkinys ir informacija sėkmingai pašalinti' });
+});
+
 module.exports = {
     getDecks,
     createDeck,
-    getDeckById
+    getDeckById,
+    updateDeck,
+    deleteDeck
 };
