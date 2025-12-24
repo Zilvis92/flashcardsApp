@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
-const CardSchema = new mongoose.Schema({
+const cardSchema = new mongoose.Schema({
   deck: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Deck',
     required: true
   },
-  sideA: {
+  front_side: {
     type: String,
     required: true,
     trim: true
   },
-  sideB: {
+  back_side: {
     type: String,
     required: true,
     trim: true
@@ -24,4 +24,4 @@ const CardSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Card', CardSchema);
+module.exports = mongoose.model('Card', cardSchema);
