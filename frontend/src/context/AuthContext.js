@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      setUser({ token }); // Galima papildyti užklausa į /users/me gauti vardui
+      setUser({ token });
     }
     setLoading(false);
   }, []);
