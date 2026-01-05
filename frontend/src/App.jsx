@@ -4,7 +4,8 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import ProtectedRoute from './components/ProtectedRoute';
-import Dashboard from './pages/Dashboard';
+import Decks from './pages/Decks';
+import DeckDetails from './pages/DeckDetails';
 
 function App() {
   return (
@@ -14,10 +15,18 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route 
-              path="/dashboard" 
+              path="/decks" 
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <Decks />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/decks/:id" 
+              element={
+                <ProtectedRoute>
+                  <DeckDetails />
                 </ProtectedRoute>
               } 
             />
