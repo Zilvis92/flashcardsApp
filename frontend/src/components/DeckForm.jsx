@@ -4,22 +4,25 @@ import api from '../api/client';
 const DeckForm = ({ onDeckCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [sourceLanguage, setSourceLanguage] = useState('Lithuanian');
+  const [targetLanguage, setTargetLanguage] = useState('English');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // We send data to the backend
-      const res = await api.post('/decks', { title, description });
+      const res = await api.post('/decks', { 
+        title, 
+        description, 
+        sourceLanguage, 
+        targetLanguage 
+      });
       
-      // We clean the form
       setTitle('');
       setDescription('');
-      
-      // Notify the parent component that a new set has arrived
       onDeckCreated(res.data);
     } catch (err) {
-      console.error('Error creating collection:', err);
-      alert('Failed to create collection');
+      console.error('Error creating collection:', err.response?.data || err);
+      alert(err.response?.data?.message || 'Failed to create collection');
     }
   };
 
@@ -34,6 +37,22 @@ const DeckForm = ({ onDeckCreated }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)} 
             required 
+          />
+        </div>
+        <div className="input-group">
+          <input 
+            type="text" 
+            placeholder="From the language" 
+            value={sourceLanguage}
+            onChange={(e) => setSourceLanguage(e.target.value)}
+            required
+          />
+          <input 
+            type="text" 
+            placeholder="Into the language" 
+            value={targetLanguage}
+            onChange={(e) => setTargetLanguage(e.target.value)}
+            required
           />
         </div>
         <div className="input-group">
