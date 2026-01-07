@@ -16,9 +16,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post('/users/login', { email, password });
-    localStorage.setItem('token', res.data.token);
-    setUser({ token: res.data.token });
+    try {
+      const res = await api.post('/users/login', { email, password });
+      localStorage.setItem('token', res.data.token);
+      setUser(res.data);
+      return res.data;
+    } catch (err) {
+      console.error("Login error:", err.response?.data?.message || err.message);
+      throw err;
+    }
   };
 
  const register = async (username, email, password) => {
