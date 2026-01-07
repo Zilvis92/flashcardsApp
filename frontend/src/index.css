@@ -218,3 +218,120 @@ input:focus, textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Mokymosi režimas (Study Mode) --- */
+
+.study-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  perspective: 1000px; /* Būtina 3D efektui */
+}
+
+.progress-bar {
+  text-align: center;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Pagrindinis kortelės konteineris */
+.flashcard-wrapper {
+  width: 100%;
+  height: 350px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+/* Klasė, kuri apverčia kortelę */
+.flashcard-wrapper.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Bendra kortelės pusių išvaizda */
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* Paslepia kitą pusę sukantis */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 20px;
+  background: var(--card-bg);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Galinė pusė (atsakymas) */
+.card-face-back {
+  background: #f0faff;
+  transform: rotateY(180deg);
+  color: var(--primary);
+}
+
+/* Mygtukų grupė po kortele */
+.study-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.hint-text {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #059669;
+}
+
+.deck-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.hint-text-muted {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.flashcard.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -10px;
+}
+
+.btn-icon-danger {
+  background: transparent;
+  color: var(--danger);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+}
+
+.btn-icon-danger:hover {
+  border-color: var(--danger);
+  border-radius: 4px;
+}

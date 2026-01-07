@@ -4,8 +4,8 @@ import api from '../api/client';
 const DeckForm = ({ onDeckCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [sourceLanguage, setSourceLanguage] = useState('Lithuanian');
-  const [targetLanguage, setTargetLanguage] = useState('English');
+  const [sourceLanguage, setSourceLanguage] = useState('English');
+  const [targetLanguage, setTargetLanguage] = useState('Lithuanian');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

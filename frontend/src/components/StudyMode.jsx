@@ -10,10 +10,10 @@ const StudyMode = ({ cards, onFinish }) => {
 
   if (unmasteredCards.length === 0) {
     return (
-      <div className="card-item text-center">
+      <div className="card text-center">
         <h3>🎉 Congratulations!</h3>
-        <p>All cards in this collection have already been learned.</p>
-        <button onClick={onFinish} className="btn btn-primary">Go back</button>
+        <p className="mt-1">All cards in this collection have already been learned.</p>
+        <button onClick={onFinish} className="btn btn-primary mt-1">Go back</button>
       </div>
     );
   }
@@ -42,22 +42,30 @@ const StudyMode = ({ cards, onFinish }) => {
 
   return (
     <div className="study-container">
-      <div className="progress-bar mb-1">
-        Card {currentIndex + 1} iš {unmasteredCards.length}
+      <div className="progress-bar">
+        Card {currentIndex + 1} from {unmasteredCards.length}
       </div>
 
       <div 
-        className={`flashcard ${isFlipped ? 'flipped' : ''}`} 
+        className={`flashcard-wrapper ${isFlipped ? 'is-flipped' : ''}`} 
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        {isFlipped ? currentCard.back_side : currentCard.front_side}
+        <div className="card-face">
+          {currentCard.front_side}
+        </div>
+        <div className="card-face card-face-back">
+          {currentCard.back_side}
+        </div>
       </div>
 
-      <p className="mt-1">
+      <p className="hint-text">
         Click on the card to turn it over
       </p>
+      {currentCard.hint && !isFlipped && (
+        <p className="text-center fs-sm mt-1">💡 Hint: {currentCard.hint}</p>
+      )}
 
-      <div className="grid mt-2">
+      <div className="study-actions">
         <button onClick={handleNext} className="btn btn-outline">
           Next card
         </button>
