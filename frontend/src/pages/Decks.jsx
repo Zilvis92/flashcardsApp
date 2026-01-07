@@ -34,27 +34,30 @@ const Decks = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div >
-      <h1>My card sets</h1>
-      
-      {/* Form of creation */}
-      <DeckForm onDeckCreated={handleDeckCreated} />
+    <>
+      <Navbar />
+      <div className="container">
+        <header className="mb-2">
+          <h1>My card sets</h1>
+        </header>
 
-      {/* List of collections */}
-      <div>
-        {decks.length === 0 ? (
-          <p>There are no collections yet. Be the first to create one!</p>
-        ) : (
-          decks.map((deck) => (
-            <div key={deck._id}>
-              <h3>{deck.title}</h3>
-              <p>{deck.description}</p>
-              <button onClick={() => navigate(`/decks/${deck._id}`)}>Open set / Learn</button>
+        <DeckForm onDeckCreated={handleDeckCreated} />
+
+        <div className="grid">
+          {decks.map((deck) => (
+            <div key={deck._id} className="card">
+              <div>
+                <h3 className="card-title">{deck.title}</h3>
+                <p className="card-text">{deck.description}</p>
+              </div>
+              <button className="btn btn-primary btn-full" onClick={() => navigate(`/decks/${deck._id}`)}>
+                Open set / Learn
+              </button>
             </div>
-          ))
-        )}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

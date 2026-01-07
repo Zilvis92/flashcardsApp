@@ -20,24 +20,22 @@ const CardForm = ({ deckId, onCardAdded }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h4>Add a new card</h4>
-      <input 
-        type="text" 
-        placeholder="Question (Front)" 
-        value={question} 
-        onChange={(e) => setQuestion(e.target.value)} 
-        required 
-      />
-      <input 
-        type="text" 
-        placeholder="Answer (End)" 
-        value={answer} 
-        onChange={(e) => setAnswer(e.target.value)} 
-        required 
-      />
-      <button type="submit">Add</button>
-    </form>
+    <div className="form-card">
+      <h3 className="mb-2">Add a new card</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="card-form-grid">
+          <div className="input-group mt-0">
+            <input type="text" placeholder="Question" value={question} onChange={(e) => setQuestion(e.target.value)} required />
+          </div>
+          <div className="input-group mt-0">
+            <input type="text" placeholder="Answer" value={answer} onChange={(e) => setQuestion(e.target.value)} required />
+          </div>
+          <div className="input-group mt-0">
+            <button type="submit" className="btn btn-primary">Add Card</button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

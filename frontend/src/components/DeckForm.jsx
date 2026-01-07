@@ -24,26 +24,29 @@ const DeckForm = ({ onDeckCreated }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Create a new collection</h3>
-      <div>
-        <input 
-          type="text" 
-          placeholder="Rinkinio pavadinimas" 
-          value={title}
-          onChange={(e) => setTitle(e.target.value)} 
-          required 
-        />
-      </div>
-      <div>
-        <textarea 
-          placeholder="Description (optional)" 
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </div>
-      <button type="submit">Create</button>
-    </form>
+    <div className="form-card">
+      <h3 className="mb-2">Create a new collection</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="input-group">
+          <input 
+            type="text" 
+            placeholder="Collection Title" 
+            value={title}
+            onChange={(e) => setTitle(e.target.value)} 
+            required 
+          />
+        </div>
+        <div className="input-group">
+          <textarea 
+            placeholder="Description (optional)" 
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows="3"
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">Create Collection</button>
+      </form>
+    </div>
   );
 };
 

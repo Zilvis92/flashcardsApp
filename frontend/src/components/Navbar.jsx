@@ -4,23 +4,19 @@ import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   return (
     <nav className="navbar">
-      <Link to="/" className="nav-logo">
-        ⚡ FlashCards
-      </Link>
-      
+      <Link to="/decks" className="nav-logo">⚡ FlashCards</Link>
       <div className="nav-links">
         {user ? (
-          <div>
-            <Link to="/decks" className="btn">My Decks</Link>
-            <button onClick={logout} className="btn btn-outline">Logout</button>
-          </div>
+          <>
+            <Link to="/decks" className="btn btn-outline">My Decks</Link>
+            <button onClick={logout} className="btn btn-danger">Logout</button>
+          </>
         ) : (
           <>
-            <Link to="/login" className="btn">Login</Link>
+            <Link to="/login" className="btn btn-outline">Login</Link>
             <Link to="/register" className="btn btn-primary">Register</Link>
           </>
         )}

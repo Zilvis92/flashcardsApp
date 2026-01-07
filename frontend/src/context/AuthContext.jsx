@@ -21,8 +21,16 @@ export const AuthProvider = ({ children }) => {
     setUser({ token: res.data.token });
   };
 
-  const register = async (username, email, password) => {
-    await api.post('/users/register', { username, email, password });
+ const register = async (username, email, password) => {
+    try {
+      const res = await api.post('/users/register', { username, email, password });
+      localStorage.setItem('token', res.data.token);
+      setUser(res.data);
+      console.log('Response status:', res.status);
+    } catch (err) {
+      console.error("Register error:", err.response?.data || err.message);
+      throw err;
+    }
   };
 
   const logout = () => {

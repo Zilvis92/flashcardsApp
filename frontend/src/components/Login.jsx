@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -19,12 +19,35 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Log in</h2>
-      <input type="email" placeholder="Email" onChange={(e) => setFormData({...formData, email: e.target.value})} required />
-      <input type="password" placeholder="Password" onChange={(e) => setFormData({...formData, password: e.target.value})} required />
-      <button type="submit">Sign in</button>
-    </form>
+    <div className="auth-wrapper">
+      <div className="form-card auth-card">
+        <form onSubmit={handleSubmit}>
+          <h2 className="mb-2">Log in</h2>
+          <div className="input-group">
+            <label className="input-label">Email Address</label>
+            <input 
+              type="email" 
+              placeholder="name@example.com" 
+              onChange={(e) => setFormData({...formData, email: e.target.value})} 
+              required 
+            />
+          </div>
+          <div className="input-group">
+            <label className="input-label">Password</label>
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              onChange={(e) => setFormData({...formData, password: e.target.value})} 
+              required 
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-full">Sign in</button>
+          <p className="mt-1" style={{ textAlign: 'center', fontSize: '0.9rem' }}>
+            Don't have an account? <Link to="/register" className="text-link">Register</Link>
+          </p>
+        </form>
+      </div>
+    </div>
   );
 };
 

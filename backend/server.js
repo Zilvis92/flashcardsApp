@@ -32,8 +32,8 @@ const startServer = async () => {
         console.log('🔗 Bandome prisijungti prie duomenų bazės...');
         await connectDB();
         console.log('✅ Duomenų bazė sėkmingai prisijungta');
-        
-        const PORT = process.env.PORT || 5000;
+
+        const PORT = process.env.PORT || 5001;
         app.listen(PORT, () => {
             console.log(`🚀 Backend API serveris veikia http://localhost:${PORT}`);
         });
