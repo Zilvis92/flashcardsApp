@@ -2,20 +2,27 @@ import React, { useState } from 'react';
 import api from '../api/client';
 
 const CardForm = ({ deckId, onCardAdded }) => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [sideA, setFrontSide] = useState('');
+  const [sideB, setBackSide] = useState('');
+  const [hint, setHint] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // We send the card to the backend for a specific set
-      const res = await api.post(`/decks/${deckId}/cards`, { question, answer });
+      const res = await api.post('/cards', { 
+        deckId, 
+        front_side: sideA, 
+        back_side: sideB, 
+        hint 
+      });
       
-      onCardAdded(res.data); // Refresh the list on the screen
-      setQuestion('');
-      setAnswer('');
+      onCardAdded(res.data);
+      setFrontSide('');
+      setBackSide('');
+      setHint('');
     } catch (err) {
-      alert('Error adding card');
+      console.error('Error adding card:', err.response?.data || err.message);
+      alert('Failed to add card. Check the console.');
     }
   };
 
@@ -25,13 +32,33 @@ const CardForm = ({ deckId, onCardAdded }) => {
       <form onSubmit={handleSubmit}>
         <div className="card-form-grid">
           <div className="input-group mt-0">
-            <input type="text" placeholder="Question" value={question} onChange={(e) => setQuestion(e.target.value)} required />
+            <input 
+              type="text" 
+              placeholder="Question (Front)" 
+              value={sideA} 
+              onChange={(e) => setFrontSide(e.target.value)}
+              required 
+            />
           </div>
           <div className="input-group mt-0">
-            <input type="text" placeholder="Answer" value={answer} onChange={(e) => setQuestion(e.target.value)} required />
+            <input 
+              type="text" 
+              placeholder="Answer (back)" 
+              value={sideB} 
+              onChange={(e) => setBackSide(e.target.value)}
+              required 
+            />
           </div>
           <div className="input-group mt-0">
-            <button type="submit" className="btn btn-primary">Add Card</button>
+            <input 
+              type="text" 
+              placeholder="Hint (optional)" 
+              value={hint} 
+              onChange={(e) => setHint(e.target.value)} 
+            />
+          </div>
+          <div className="input-group mt-0">
+            <button type="submit" className="btn btn-primary">Add</button>
           </div>
         </div>
       </form>

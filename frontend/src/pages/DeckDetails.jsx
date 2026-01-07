@@ -46,16 +46,21 @@ const DeckDetails = () => {
 
         <h2>Cards ({deck.cards?.length || 0})</h2>
         <div className="grid">
-          {deck.cards?.map((card, index) => (
-            <div key={index} className="card">
+          {deck.cards?.map((card) => (
+            <div key={card._id} className="card">
               <div className="input-group">
                 <span className="input-label">Question:</span>
-                <p>{card.question}</p>
+                <p>{card.front_side}</p> 
               </div>
               <div>
                 <span className="input-label">Answer:</span>
-                <p>{card.answer}</p>
+                <p>{card.back_side}</p>
               </div>
+              {card.hint && (
+                <p className="input-label">
+                   Hint: {card.hint}
+                </p>
+              )}
             </div>
           ))}
         </div>
