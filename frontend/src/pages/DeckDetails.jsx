@@ -11,6 +11,8 @@ const DeckDetails = () => {
   const [deck, setDeck] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isStudyMode, setIsStudyMode] = useState(false);
+  const [editingCardId, setEditingCardId] = useState(null);
+  const [editData, setEditData] = useState({ front_side: '', back_side: '', hint: '' });
 
   useEffect(() => {
     const fetchDeck = async () => {
@@ -56,6 +58,24 @@ const DeckDetails = () => {
     }
   };
 
+  const startEditing = (card) => {
+    setEditingCardId(card._id);
+    setEditData({ front_side: card.front_side, back_side: card.back_side, hint: card.hint || '' });
+  };
+
+  const handleUpdateCard = async (cardId) => {
+    try {
+      const res = await api.put(`/cards/${cardId}`, editData);
+      setDeck((prev) => ({
+        ...prev,
+        cards: prev.cards.map(c => c._id === cardId ? res.data : c)
+      }));
+      setEditingCardId(null);
+    } catch (err) {
+      alert('Update failed');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!deck) return <p>Collection not found.</p>;
 
@@ -95,26 +115,48 @@ const DeckDetails = () => {
             <div className="grid">
               {deck.cards?.map((card) => (
                 <div key={card._id} className="card">
-                  <div className="card-header-actions">
-                    <button 
-                      onClick={() => handleDeleteCard(card._id)} 
-                      className="btn-icon-danger"
-                      title="Delete card"
-                    >
-                      ✕
-                    </button>
-                  </div>
-
-                  <div className="input-group">
-                    <span className="input-label">Question:</span>
-                    <p>{card.front_side}</p> 
-                  </div>
-                  <div>
-                    <span className="input-label">Answer:</span>
-                    <p>{card.back_side}</p>
-                  </div>
-                  {card.hint && (
-                    <p className="hint-text-muted mt-1">Hint: {card.hint}</p>
+                  {editingCardId === card._id ? (
+                    /* REDAGAVIMO FORMA KORTELĖS VIDUJE */
+                    <div className="edit-mode">
+                      <input 
+                        value={editData.front_side} 
+                        onChange={(e) => setEditData({...editData, front_side: e.target.value})} 
+                        placeholder="Question"
+                      />
+                      <input 
+                        className="mt-1"
+                        value={editData.back_side} 
+                        onChange={(e) => setEditData({...editData, back_side: e.target.value})} 
+                        placeholder="Answer"
+                      />
+                      <input 
+                        className="mt-1"
+                        value={editData.hint} 
+                        onChange={(e) => setEditData({...editData, hint: e.target.value})} 
+                        placeholder="Hint"
+                      />
+                      <div className="edit-actions">
+                        <button onClick={() => handleUpdateCard(card._id)} className="btn btn-save">Save</button>
+                        <button onClick={() => setEditingCardId(null)} className="btn btn-outline">Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* PAPRASTAS RODYMAS */
+                    <>
+                      <div className="card-header-actions">
+                        <button onClick={() => startEditing(card)} className="btn-icon-danger" style={{color: 'var(--primary)'}} title="Edit">✎</button>
+                        <button onClick={() => handleDeleteCard(card._id)} className="btn-icon-danger" title="Delete">✕</button>
+                      </div>
+                      <div className="input-group">
+                        <span className="input-label">Question:</span>
+                        <p>{card.front_side}</p> 
+                      </div>
+                      <div>
+                        <span className="input-label">Answer:</span>
+                        <p>{card.back_side}</p>
+                      </div>
+                      {card.hint && <p className="hint-text-muted mt-1">Hint: {card.hint}</p>}
+                    </>
                   )}
                 </div>
               ))}

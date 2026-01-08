@@ -68,6 +68,33 @@ const updateCardMastered = asyncHandler(async (req, res) => {
     res.json(updatedCard);
 });
 
+// @desc    Update a card (full edit)
+// @route   PUT /api/cards/:id
+// @access  Private
+const updateCard = asyncHandler(async (req, res) => {
+    const { front_side, back_side, hint } = req.body;
+    const card = await Card.findById(req.params.id);
+
+    if (!card) {
+        res.status(404);
+        throw new Error('Card not found');
+    }
+
+    const deck = await Deck.findById(card.deck);
+    if (!deck || deck.author.toString() !== req.user._id.toString()) {
+        res.status(401);
+        throw new Error('Not authorized');
+    }
+
+    // Atnaujiname laukus
+    card.front_side = front_side || card.front_side;
+    card.back_side = back_side || card.back_side;
+    card.hint = hint !== undefined ? hint : card.hint;
+
+    const updatedCard = await card.save();
+    res.json(updatedCard);
+});
+
 // @desc delete a card
 // @route DELETE /api/decks/:id/cards/:cardId
 // @access Private
@@ -98,6 +125,7 @@ module.exports = {
     getCardsByDeck,
     addCard,
     updateCardMastered,
+    updateCard,
     deleteCard
 };
     

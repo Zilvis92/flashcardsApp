@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -30,7 +30,7 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route path="/" element={<h1>Welcome to the Flashcards app!</h1>} />
+            <Route path="/" element={<Navigate to="/decks" replace />}/>
           </Routes>
       </Router>
     </AuthProvider>
