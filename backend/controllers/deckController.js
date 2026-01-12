@@ -65,7 +65,7 @@ const updateDeck = asyncHandler(async (req, res) => {
         req.params.id,
         req.body, // Paima pasikeitusius laukus iš užklausos
         { new: true } // Grąžina jau atnaujintą objektą
-    );
+    ).populate('cards');
 
     res.json(updatedDeck);
 });

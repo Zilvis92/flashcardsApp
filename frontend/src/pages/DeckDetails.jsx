@@ -13,12 +13,15 @@ const DeckDetails = () => {
   const [isStudyMode, setIsStudyMode] = useState(false);
   const [editingCardId, setEditingCardId] = useState(null);
   const [editData, setEditData] = useState({ front_side: '', back_side: '', hint: '' });
+  const [isEditingDeck, setIsEditingDeck] = useState(false);
+  const [deckData, setDeckData] = useState({ title: '', description: '' });
 
   useEffect(() => {
     const fetchDeck = async () => {
       try {
         const res = await api.get(`/decks/${id}`);
         setDeck(res.data);
+        setDeckData({ title: res.data.title, description: res.data.description });
         setLoading(false);
       } catch (err) {
         console.error('Error loading collection', err);
@@ -76,6 +79,16 @@ const DeckDetails = () => {
     }
   };
 
+  const handleUpdateDeck = async () => {
+    try {
+      const res = await api.put(`/decks/${id}`, deckData);
+      setDeck(res.data);
+      setIsEditingDeck(false);
+    } catch (err) {
+      alert('Failed to update collection info');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!deck) return <p>Collection not found.</p>;
 
@@ -87,6 +100,14 @@ const DeckDetails = () => {
           <Link to="/decks" className="text-link">← Back to all collections</Link>
           
           <div className="nav-links">
+            {!isStudyMode && (
+              <button 
+                onClick={() => setIsEditingDeck(!isEditingDeck)} 
+                className="btn btn-outline"
+              >
+                {isEditingDeck ? 'Cancel Edit' : 'Edit Title ✎'}
+              </button>
+            )}
             <button onClick={handleDeleteDeck} className="btn btn-danger">
               Delete Collection 🗑️
             </button>
@@ -102,8 +123,27 @@ const DeckDetails = () => {
         </div>
 
         <div className="deck-header">
-          <h1>{deck.title}</h1>
-          <p className="card-text">{deck.description}</p>
+          {isEditingDeck ? (
+            <div className="form-card" style={{ padding: '1rem', marginBottom: '1rem' }}>
+              <input 
+                className="mb-1"
+                value={deckData.title} 
+                onChange={(e) => setDeckData({...deckData, title: e.target.value})}
+                placeholder="Collection Title"
+              />
+              <textarea 
+                value={deckData.description} 
+                onChange={(e) => setDeckData({...deckData, description: e.target.value})}
+                placeholder="Description"
+              />
+              <button onClick={handleUpdateDeck} className="btn btn-save mt-1">Save Changes</button>
+            </div>
+          ) : (
+            <>
+              <h1>{deck.title}</h1>
+              <p className="card-text">{deck.description}</p>
+            </>
+          )}
         </div>
 
         {isStudyMode ? (
