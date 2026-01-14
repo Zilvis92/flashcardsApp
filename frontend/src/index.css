@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
+/* 1. KINTAMIEJI IR TEMOS */
 :root {
   --primary: #4f46e5;
   --primary-hover: #4338ca;
@@ -9,11 +10,23 @@
   --text-muted: #64748b;
   --danger: #ef4444;
   --danger-hover: #dc2626;
+  --success: #10b981;
+  --success-hover: #059669;
   --radius: 12px;
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+[data-theme='dark'] {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+  --primary: #818cf8;
+}
+
+/* 2. BAZINIAI STILIAI */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -21,6 +34,7 @@ body {
   background-color: var(--bg);
   color: var(--text-main);
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -29,7 +43,7 @@ body {
   padding: 2rem;
 }
 
-/* Navigacija */
+/* 3. NAVIGACIJA */
 .navbar {
   background: var(--card-bg);
   padding: 1rem 2rem;
@@ -40,6 +54,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease;
 }
 
 .nav-logo {
@@ -54,7 +69,15 @@ body {
 
 .nav-links { display: flex; gap: 1rem; align-items: center; }
 
-/* Grid Sistema */
+.deck-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  background: transparent;
+}
+
+/* 4. GRID IR KORTELĖS */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -62,7 +85,6 @@ body {
   margin-top: 2rem;
 }
 
-/* Kortelės */
 .card {
   background: var(--card-bg);
   padding: 1.5rem;
@@ -75,6 +97,8 @@ body {
   justify-content: space-between;
 }
 
+[data-theme='dark'] .card { border-color: #334155; }
+
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
@@ -83,7 +107,7 @@ body {
 .card-title { font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem; }
 .card-text { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; }
 
-/* Formos ir Input */
+/* 5. FORMOS IR INPUTAI */
 .form-card {
   background: var(--card-bg);
   padding: 2.5rem;
@@ -91,14 +115,6 @@ body {
   box-shadow: var(--shadow);
   width: 100%;
   margin-bottom: 2rem;
-}
-
-.auth-wrapper {
-  min-height: 85vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
 }
 
 .input-group { margin-bottom: 1.25rem; }
@@ -112,6 +128,14 @@ input, textarea {
   font-size: 1rem;
   font-family: inherit;
   transition: var(--transition);
+  background-color: var(--card-bg);
+  color: var(--text-main);
+}
+
+[data-theme='dark'] input, 
+[data-theme='dark'] textarea {
+  background-color: #334155;
+  border-color: #475569;
 }
 
 input:focus, textarea:focus {
@@ -120,7 +144,7 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-/* Mygtukai */
+/* 6. MYGTUKAI */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -136,11 +160,7 @@ input:focus, textarea:focus {
   gap: 0.5rem;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: white;
-}
-
+.btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: var(--primary-hover); }
 
 .btn-outline {
@@ -148,93 +168,42 @@ input:focus, textarea:focus {
   border: 1.5px solid #e2e8f0;
   color: var(--text-main);
 }
-
 .btn-outline:hover { background: #f1f5f9; border-color: #cbd5e1; }
+[data-theme='dark'] .btn-outline:hover { background: #334155; border-color: #475569; }
 
-.btn-danger {
-  background: transparent;
-  border: 1.5px solid var(--danger);
-  color: var(--danger);
-}
-
+.btn-danger { background: transparent; border: 1.5px solid var(--danger); color: var(--danger); }
 .btn-danger:hover { background: var(--danger); color: white; }
 
-.btn-full { width: 100%; }
+.btn-success, .btn-save { background: var(--success); color: white; }
+.btn-success:hover, .btn-save:hover { background: var(--success-hover); }
 
-/* Pagalbinės klasės */
-.text-link { color: var(--primary); text-decoration: none; font-weight: 600; }
-.text-link:hover { text-decoration: underline; }
-.mb-2 { margin-bottom: 2rem; }
-
-/* Išvalome inline stilius per klases */
-.mt-1 { margin-top: 1rem; }
-.mt-0 { margin-top: 0; }
-
-/* Speciali klasė kortelių pridėjimo formos tinkleliui */
-.card-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 1rem;
-  align-items: end;
-  margin-top: 0;
+.btn-theme-toggle {
+  padding: 0.5rem 0.8rem;
+  font-size: 1.1rem;
+  background: transparent;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
 }
 
-/* Prisijungimo/Registracijos formos dydis */
-.auth-card {
-  max-width: 400px;
-  width: 100%;
+.btn-icon-danger {
+  background: transparent;
+  color: var(--danger);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+  cursor: pointer;
 }
+.btn-icon-danger:hover { border-color: var(--danger); border-radius: 4px; }
 
-/* Responsyvumas mažesniems ekranams */
-@media (max-width: 768px) {
-  .card-form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Papildomos pagalbinės klasės švariai struktūrai */
-.mt-1 { margin-top: 1rem; }
-.text-center { text-align: center; }
-.fs-sm { font-size: 0.9rem; }
-
-/* Specialus tinklelis kortelių pridėjimo formai */
-.card-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 1rem;
-  align-items: flex-end;
-  margin-top: 0;
-}
-
-/* Užtikriname, kad DeckDetails viršutinė dalis turėtų tarpą */
-.deck-header {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-
-/* Responsyvumas - mobiliuose įrenginiuose forma susistums į stulpelį */
-@media (max-width: 768px) {
-  .card-form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* --- Mokymosi režimas (Study Mode) --- */
-
+/* 7. MOKYMOSI REŽIMAS (3D) */
 .study-container {
   max-width: 600px;
   margin: 2rem auto;
-  perspective: 1000px; /* Būtina 3D efektui */
+  perspective: 1000px;
 }
 
-.progress-bar {
-  text-align: center;
-  color: var(--text-muted);
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-/* Pagrindinis kortelės konteineris */
 .flashcard-wrapper {
   width: 100%;
   height: 350px;
@@ -244,17 +213,13 @@ input:focus, textarea:focus {
   transform-style: preserve-3d;
 }
 
-/* Klasė, kuri apverčia kortelę */
-.flashcard-wrapper.is-flipped {
-  transform: rotateY(180deg);
-}
+.flashcard-wrapper.is-flipped { transform: rotateY(180deg); }
 
-/* Bendra kortelės pusių išvaizda */
 .card-face {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; /* Paslepia kitą pusę sukantis */
+  backface-visibility: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,86 +233,38 @@ input:focus, textarea:focus {
   text-align: center;
 }
 
-/* Galinė pusė (atsakymas) */
 .card-face-back {
   background: #f0faff;
   transform: rotateY(180deg);
   color: var(--primary);
 }
 
-/* Mygtukų grupė po kortele */
-.study-actions {
-  display: flex;
+[data-theme='dark'] .card-face-back { background: #1e293b; color: var(--primary); }
+
+.study-actions { display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; }
+
+/* 8. PAGALBINĖS KLASĖS */
+.text-link { color: var(--primary); text-decoration: none; font-weight: 600; }
+.text-link:hover { text-decoration: underline; }
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.fs-sm { font-size: 0.9rem; }
+.hint-text-muted { color: var(--text-muted); font-size: 0.85rem; }
+.card-header-actions { display: flex; justify-content: flex-end; margin-bottom: -10px; gap: 5px; }
+.edit-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+/* 9. RESPONSYVUMAS */
+.card-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
   gap: 1rem;
-  margin-top: 2rem;
-  justify-content: center;
+  align-items: flex-end;
 }
 
-.hint-text {
-  text-align: center;
-  margin-top: 1rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.btn-success {
-  background: #10b981;
-  color: white;
-}
-
-.btn-success:hover {
-  background: #059669;
-}
-
-.deck-nav-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.hint-text-muted {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.flashcard.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-header-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: -10px;
-}
-
-.btn-icon-danger {
-  background: transparent;
-  color: var(--danger);
-  padding: 0.2rem 0.5rem;
-  font-size: 0.8rem;
-  border: 1px solid transparent;
-}
-
-.btn-icon-danger:hover {
-  border-color: var(--danger);
-  border-radius: 4px;
-}
-
-.btn-save {
-  background: #10b981;
-  color: white;
-  margin-top: 0.5rem;
-}
-
-.btn-save:hover {
-  background: #059669;
-}
-
-.edit-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+@media (max-width: 768px) {
+  .card-form-grid { grid-template-columns: 1fr; }
+  .container { padding: 1rem; }
+  .card-face { font-size: 1.5rem; }
 }
