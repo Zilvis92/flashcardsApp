@@ -101,11 +101,21 @@ const DeckDetails = () => {
     }
   };
 
+  // Funkcija, kuri atnaujina konkrečios kortelės 'mastered' būseną vietiniame masyve
+  const updateLocalCardStatus = (cardId, isMastered) => {
+    setDeck((prevDeck) => ({
+      ...prevDeck,
+      cards: prevDeck.cards.map((card) =>
+        card._id === cardId ? { ...card, mastered: isMastered } : card
+      ),
+    }));
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!deck) return <p>Collection not found.</p>;
 
   // Paskaičiuojame, ar yra kortelių, kurios dar neišmoktos
-  const hasUnmasteredCards = deck.cards?.some(card => !card.mastered);
+  const hasCardsToLearn = deck.cards?.some(card => !card.mastered);
 
   return (
     <>
@@ -136,7 +146,7 @@ const DeckDetails = () => {
                 onClick={() => setIsStudyMode(!isStudyMode)} 
                 className={`btn ${isStudyMode ? 'btn-danger' : 'btn-primary'}`}
               >
-                {isStudyMode ? 'Stop Studying' : (hasUnmasteredCards ? 'Start Study Mode 🚀' : 'Review All ✅')}
+                {isStudyMode ? 'Stop Studying' : (hasCardsToLearn ? 'Start Study Mode 🚀' : 'Review All ✅')}
               </button>
             )}
           </div>
@@ -167,7 +177,11 @@ const DeckDetails = () => {
         </div>
 
         {isStudyMode ? (
-          <StudyMode cards={deck.cards} onFinish={() => setIsStudyMode(false)} onReset={handleResetProgress} />
+          <StudyMode 
+            cards={deck.cards} 
+            onFinish={() => setIsStudyMode(false)} 
+            onReset={handleResetProgress} 
+            onCardStatusChange={updateLocalCardStatus} />
         ) : (
           <>
             <CardForm deckId={id} onCardAdded={handleCardAdded} />
