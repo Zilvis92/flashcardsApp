@@ -31,6 +31,7 @@ const DeckForm = ({ onDeckCreated }) => {
       <h3 className="mb-2">Create a new collection</h3>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
+          <label className="input-label">Title</label>
           <input 
             type="text" 
             placeholder="Collection Title" 
@@ -39,23 +40,35 @@ const DeckForm = ({ onDeckCreated }) => {
             required 
           />
         </div>
-        <div className="input-group">
-          <input 
-            type="text" 
-            placeholder="From the language" 
-            value={sourceLanguage}
-            onChange={(e) => setSourceLanguage(e.target.value)}
-            required
-          />
-          <input 
-            type="text" 
-            placeholder="Into the language" 
-            value={targetLanguage}
-            onChange={(e) => setTargetLanguage(e.target.value)}
-            required
-          />
+        <div className="input-row">
+          <div className="input-col">
+            <div className="input-group">
+              <label className="input-label">From</label>
+              <input 
+                type="text" 
+                placeholder="Source Language" 
+                value={sourceLanguage}
+                onChange={(e) => setSourceLanguage(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          <div className="input-col">
+            <div className="input-group">
+              <label className="input-label">Into</label>
+              <input 
+                type="text" 
+                placeholder="Target Language" 
+                value={targetLanguage}
+                onChange={(e) => setTargetLanguage(e.target.value)}
+                required
+              />
+            </div>
+          </div>
         </div>
+
         <div className="input-group">
+          <label className="input-label">Description</label>
           <textarea 
             placeholder="Description (optional)" 
             value={description}
@@ -63,7 +76,10 @@ const DeckForm = ({ onDeckCreated }) => {
             rows="3"
           />
         </div>
-        <button type="submit" className="btn btn-primary">Create Collection</button>
+        
+        <button type="submit" className="btn btn-primary btn-full">
+          Create Collection
+        </button>
       </form>
     </div>
   );

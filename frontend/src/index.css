@@ -144,6 +144,23 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
+/* Konteineris, laikantis du inputus vienoje eilėje */
+.input-row {
+  display: flex;
+  gap: 1.5rem; /* Tarpas tarp laukelių */
+  margin-bottom: 1.25rem;
+}
+
+/* Atskiras stulpelis eilutės viduje */
+.input-col {
+  flex: 1;
+}
+
+/* Pašaliname margin-bottom vidiniams grupavimams, kad nesidubliuotų su eilutės margin */
+.input-col .input-group {
+  margin-bottom: 0;
+}
+
 /* 6. MYGTUKAI */
 .btn {
   display: inline-flex;
@@ -267,4 +284,8 @@ input:focus, textarea:focus {
   .card-form-grid { grid-template-columns: 1fr; }
   .container { padding: 1rem; }
   .card-face { font-size: 1.5rem; }
+  .input-row {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 }
