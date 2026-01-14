@@ -89,8 +89,23 @@ const DeckDetails = () => {
     }
   };
 
+  // Funkcija progresui nunulinti
+  const handleResetProgress = async () => {
+    if (!window.confirm('Do you want to reset all cards and study again?')) return;
+    try {
+      const res = await api.post(`/decks/${id}/reset`);
+      setDeck(res.data);
+      alert('Progress reset! You can now study all cards again.');
+    } catch (err) {
+      alert('Failed to reset progress');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!deck) return <p>Collection not found.</p>;
+
+  // Paskaičiuojame, ar yra kortelių, kurios dar neišmoktos
+  const hasUnmasteredCards = deck.cards?.some(card => !card.mastered);
 
   return (
     <>
@@ -100,6 +115,11 @@ const DeckDetails = () => {
           <Link to="/decks" className="text-link">← Back to all collections</Link>
           
           <div className="nav-links">
+            {deck.cards?.length > 0 && (
+              <button onClick={handleResetProgress} className="btn btn-outline">
+                Reset Progress 🔄
+              </button>
+            )}
             {!isStudyMode && (
               <button 
                 onClick={() => setIsEditingDeck(!isEditingDeck)} 
@@ -116,7 +136,7 @@ const DeckDetails = () => {
                 onClick={() => setIsStudyMode(!isStudyMode)} 
                 className={`btn ${isStudyMode ? 'btn-danger' : 'btn-primary'}`}
               >
-                {isStudyMode ? 'Stop Studying' : 'Start Study Mode 🚀'}
+                {isStudyMode ? 'Stop Studying' : (hasUnmasteredCards ? 'Start Study Mode 🚀' : 'Review All ✅')}
               </button>
             )}
           </div>
@@ -147,7 +167,7 @@ const DeckDetails = () => {
         </div>
 
         {isStudyMode ? (
-          <StudyMode cards={deck.cards} onFinish={() => setIsStudyMode(false)} />
+          <StudyMode cards={deck.cards} onFinish={() => setIsStudyMode(false)} onReset={handleResetProgress} />
         ) : (
           <>
             <CardForm deckId={id} onCardAdded={handleCardAdded} />

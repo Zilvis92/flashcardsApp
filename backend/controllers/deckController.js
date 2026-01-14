@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Deck = require('../models/Deck');
-
+const Card = require('../models/Card');
 // @desc get all decks
 // @route GET /api/decks
 // @access Private
@@ -91,10 +91,38 @@ const deleteDeck = asyncHandler(async (req, res) => {
     res.json({ message: 'Rinkinys ir informacija sėkmingai pašalinti' });
 });
 
+// @desc    Reset all cards mastered status in a deck
+// @route   POST /api/decks/:id/reset
+// @access  Private
+const resetDeckProgress = asyncHandler(async (req, res) => {
+    const deck = await Deck.findById(req.params.id);
+
+    if (!deck) {
+        res.status(404);
+        throw new Error('Deck not found');
+    }
+
+    if (deck.author.toString() !== req.user._id.toString()) {
+        res.status(401);
+        throw new Error('Not authorized');
+    }
+
+    // Atnaujiname visas korteles, kurios priklauso šiam rinkiniled
+    await Card.updateMany(
+        { deck: req.params.id },
+        { $set: { mastered: false } }
+    );
+
+    // Grąžiname atnaujintą rinkinį su kortelėmis
+    const updatedDeck = await Deck.findById(req.params.id).populate('cards');
+    res.json(updatedDeck);
+});
+
 module.exports = {
     getDecks,
     createDeck,
     getDeckById,
     updateDeck,
-    deleteDeck
+    deleteDeck,
+    resetDeckProgress
 };

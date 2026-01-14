@@ -5,7 +5,8 @@ const {
     createDeck, 
     getDeckById, 
     updateDeck, 
-    deleteDeck 
+    deleteDeck,
+    resetDeckProgress 
 } = require('../controllers/deckController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -16,5 +17,7 @@ router.route('/:id')
     .get(protect, getDeckById)
     .put(protect, updateDeck)
     .delete(protect, deleteDeck);
+
+router.post('/:id/reset', protect, resetDeckProgress);
 
 module.exports = router;
