@@ -89,7 +89,7 @@ const DeckDetails = () => {
     }
   };
 
-  // Funkcija progresui nunulinti
+  // Function to reset progress
   const handleResetProgress = async () => {
     if (!window.confirm('Do you want to reset all cards and study again?')) return;
     try {
@@ -101,7 +101,7 @@ const DeckDetails = () => {
     }
   };
 
-  // Funkcija, kuri atnaujina konkrečios kortelės 'mastered' būseną vietiniame masyve
+  // Function that updates the 'mastered' status of a specific card in the local array
   const updateLocalCardStatus = (cardId, isMastered) => {
     setDeck((prevDeck) => ({
       ...prevDeck,
@@ -114,7 +114,7 @@ const DeckDetails = () => {
   if (loading) return <p>Loading...</p>;
   if (!deck) return <p>Collection not found.</p>;
 
-  // Paskaičiuojame, ar yra kortelių, kurios dar neišmoktos
+  // We calculate whether there are any cards that have not yet been paid for.
   const hasCardsToLearn = deck.cards?.some(card => !card.mastered);
 
   return (
@@ -190,7 +190,6 @@ const DeckDetails = () => {
               {deck.cards?.map((card) => (
                 <div key={card._id} className="card">
                   {editingCardId === card._id ? (
-                    /* REDAGAVIMO FORMA KORTELĖS VIDUJE */
                     <div className="edit-mode">
                       <input 
                         value={editData.front_side} 
@@ -215,7 +214,6 @@ const DeckDetails = () => {
                       </div>
                     </div>
                   ) : (
-                    /* PAPRASTAS RODYMAS */
                     <>
                       <div className="card-header-actions">
                         <button onClick={() => startEditing(card)} className="btn-icon-danger" style={{color: 'var(--primary)'}} title="Edit">✎</button>

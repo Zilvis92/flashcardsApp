@@ -53,18 +53,18 @@ const updateDeck = asyncHandler(async (req, res) => {
 
     if (!deck) {
         res.status(404);
-        throw new Error('Rinkinys nerastas');
+        throw new Error('Collection not found');
     }
 
     if (deck.author.toString() !== req.user._id.toString()) {
         res.status(401);
-        throw new Error('Vartotojas neautorizuotas');
+        throw new Error('User not authorized');
     }
 
     const updatedDeck = await Deck.findByIdAndUpdate(
         req.params.id,
-        req.body, // Paima pasikeitusius laukus iš užklausos
-        { new: true } // Grąžina jau atnaujintą objektą
+        req.body, // Takes the changed fields from the query
+        { new: true } // Returns the updated object
     ).populate('cards');
 
     res.json(updatedDeck);
@@ -78,17 +78,17 @@ const deleteDeck = asyncHandler(async (req, res) => {
 
     if (!deck) {
         res.status(404);
-        throw new Error('Rinkinys nerastas');
+        throw new Error('Collection not found');
     }
 
-    // Tikriname ar trina savininkas (tavo modelyje laukas yra 'author')
+    // We check whether the owner is deleting (in your model, the field is 'author')
     if (deck.author.toString() !== req.user._id.toString()) {
         res.status(401);
-        throw new Error('Vartotojas neautorizuotas');
+        throw new Error('User not authorized');
     }
 
     await deck.deleteOne();
-    res.json({ message: 'Rinkinys ir informacija sėkmingai pašalinti' });
+    res.json({ message: 'Collection and information successfully deleted' });
 });
 
 // @desc    Reset all cards mastered status in a deck
@@ -107,13 +107,13 @@ const resetDeckProgress = asyncHandler(async (req, res) => {
         throw new Error('Not authorized');
     }
 
-    // Atnaujiname visas korteles, kurios priklauso šiam rinkiniled
+    // Update all cards in the deck to not mastered
     await Card.updateMany(
         { deck: req.params.id },
         { $set: { mastered: false } }
     );
 
-    // Grąžiname atnaujintą rinkinį su kortelėmis
+    // Return updated deck with cards
     const updatedDeck = await Deck.findById(req.params.id).populate('cards');
     res.json(updatedDeck);
 });

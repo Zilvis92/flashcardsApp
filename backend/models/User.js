@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
-  password: { // Hash'intas slaptažodis
+  password: { // Hash password
     type: String,
     required: true
   },
@@ -41,12 +41,12 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Metodas slaptažodžio tikrinimui (naudojamas prisijungiant)
+// Method to check password
 userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Automatinis slaptažodžio užšifravimas prieš išsaugojimą
+// Automatic password encryption before saving
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);

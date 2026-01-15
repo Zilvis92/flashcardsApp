@@ -5,17 +5,16 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Filtruojame tik tas, kurios dar neišmoktos
+  // We only filter those that have not yet been learned
   const unmasteredCards = cards.filter(card => !card.mastered);
   
-  // Jei turime neišmoktų - rodome jas, jei ne - rodome visas (Review režimas)
+  // If we have any unmastered tracks, we show them; if not, we show all tracks (Review mode).
   const cardsToDisplay = unmasteredCards.length > 0 ? unmasteredCards : cards;
 
-  // Funkcija, kuri iškviečia reset ir atstato vietinę būseną
   const handleResetAndRestart = async () => {
-    await onReset(); // Iškviečiame funkciją iš DeckDetails, kuri atlieka API skambutį
-    setCurrentIndex(0); // Grįžtame prie pirmos kortelės
-    setIsFlipped(false); // Užtikriname, kad kortelė nebūtų apversta
+    await onReset();
+    setCurrentIndex(0); // Back to the first card
+    setIsFlipped(false);
   };
 
   const handleNext = () => {
@@ -28,7 +27,7 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
     try {
       await api.put(`/cards/${currentCard._id}/mastered`, { mastered: true });
       
-      // Iškviečiame tėvinio komponento funkciją, kad atnaujintų būseną
+      // We call the parent component function to update the state
       if (onCardStatusChange) {
         onCardStatusChange(currentCard._id, true);
       }
@@ -39,18 +38,16 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
     }
   };
 
-  // Pabaigos ekranas
   if (currentIndex >= cardsToDisplay.length) {
     return (
       <div className="card text-center">
-        <h3>🎉 Visos kortelės peržiūrėtos!</h3>
-        <p className="mt-1">Norite pradėti mokymosi ciklą iš naujo?</p>
+        <h3>🎉 All cards viewed!</h3>
+        <p className="mt-1">You want to restart the learning cycle?</p>
         <div className="study-actions">
-          {/* Šis mygtukas iškviečia mūsų naują funkciją */}
           <button onClick={handleResetAndRestart} className="btn btn-primary">
-            Nunulinti ir Kartoti 🔄
+            Reset and Repeat 🔄
           </button>
-          <button onClick={onFinish} className="btn btn-outline">Baigti</button>
+          <button onClick={onFinish} className="btn btn-outline">Finish</button>
         </div>
       </div>
     );
@@ -61,8 +58,8 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
   return (
     <div className="study-container">
       <div className="progress-bar">
-        Kortelė {currentIndex + 1} iš {cardsToDisplay.length}
-        {unmasteredCards.length === 0 && " (Peržiūros režimas)"}
+        Card {currentIndex + 1} from {cardsToDisplay.length}
+        {unmasteredCards.length === 0 && "(View mode)"}
       </div>
 
       <div 
@@ -77,20 +74,20 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
         </div>
       </div>
 
-      <p className="hint-text">Spauskite ant kortelės, kad ją apverstumėte</p>
+      <p className="hint-text">Tap on the card to flip it over</p>
       
       {currentCard.hint && !isFlipped && (
-        <p className="text-center fs-sm mt-1">💡 Užuomina: {currentCard.hint}</p>
+        <p className="text-center fs-sm mt-1">💡 Hint: {currentCard.hint}</p>
       )}
 
       <div className="study-actions">
         <button onClick={handleNext} className="btn btn-outline">
-          {currentIndex === cardsToDisplay.length - 1 ? 'Baigti' : 'Kita kortelė'}
+          {currentIndex === cardsToDisplay.length - 1 ? 'Finish' : 'Next card'}
         </button>
         
         {!currentCard.mastered && (
           <button onClick={markAsMastered} className="btn btn-success">
-            Išmokau ✅
+            learned ✅
           </button>
         )}
       </div>
