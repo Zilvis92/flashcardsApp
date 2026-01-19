@@ -1,72 +1,111 @@
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(7, 7, 49, 0.8);
-  display: flex; align-items: center; justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10000;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-container-inner {
-  background: #a4363e;
-  padding: 30px;
-  border-radius: 30px;
-  box-shadow: 5px 6px 0px -2px #620d15, -6px 5px 0px -2px #620d15,
-              0px -2px 0px 2px #ee9191, 0px 10px 0px 0px #610c14;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   width: 90%;
-  max-width: 550px;
-  animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  max-width: 450px;
+  border: 1px solid #e2e8f0;
+  animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s ease;
+}
+
+[data-theme='dark'] .modal-container-inner {
+  border-color: #334155;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5);
 }
 
 .modal-content {
-  font-family: "Skranji", cursive;
-  background: radial-gradient(#fffbf3, #ffe19e);
-  padding: 20px;
-  border-radius: 20px;
-  border: 4px solid #5e1e21;
   text-align: center;
-  box-shadow: inset 0px 0px 15px 0px #614506;
+  margin-bottom: 2rem;
 }
 
 .modal-title-text {
-  font-size: 24px;
-  color: #a4363e;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.025em;
 }
 
 .modal-message-text {
-  font-size: 28px;
-  color: #461417;
-  line-height: 1.2;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
 .modal-buttons {
-  margin-top: 30px;
   display: flex;
-  gap: 20px;
+  gap: 1rem;
+  justify-content: center;
 }
 
+/* Mygtukų stilius iš .btn klasės */
 .btn-modal {
   flex: 1;
-  padding: 15px;
-  border-radius: 20px;
-  border: 2px solid #49181e;
-  font-family: "Skranji", cursive;
-  color: #fff;
-  font-size: 22px;
-  text-shadow: 1px 2px 3px #000;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
-  transition: transform 0.1s;
+  transition: var(--transition);
+  border: none;
 }
 
-.btn-modal:active { transform: scale(0.95); }
+.btn-modal.confirm {
+  background: var(--primary);
+  color: white;
+}
 
-.btn-modal.confirm { background: linear-gradient(#ced869, #536d1b); }
-.btn-modal.cancel { background: linear-gradient(#ea7079, #891a1a); }
+.btn-modal.confirm:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
 
-@keyframes modalPop {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
+.btn-modal.cancel {
+  background: transparent;
+  border: 1.5px solid #e2e8f0;
+  color: var(--text-main);
+}
+
+.btn-modal.cancel:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+[data-theme='dark'] .btn-modal.cancel {
+  border-color: #475569;
+}
+
+[data-theme='dark'] .btn-modal.cancel:hover {
+  background: #334155;
+}
+
+/* Animacijos */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
