@@ -1,20 +1,47 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import Modal from './Modal/Modal';
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [modalConfig, setModalConfig] = useState({ 
+    isOpen: false, 
+    title: '', 
+    message: '',
+    isSuccess: false
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await register(formData.username, formData.email, formData.password);
-      alert('Registration successful! Please log in now.');
+      setModalConfig({
+        isOpen: true,
+        title: "Welcome!",
+        message: "Registration successful! You can now log in to your account.",
+        isSuccess: true
+      });
       navigate('/login');
     } catch (err) {
-      alert('Error when registering');
+      const errorMsg = err.response?.data?.message || 'Something went wrong during registration.';
+      setModalConfig({
+        isOpen: true,
+        title: "Registration Error",
+        message: errorMsg,
+        isSuccess: false
+      });
+    }
+  };
+
+  const handleModalClose = () => {
+    const wasSuccess = modalConfig.isSuccess;
+    setModalConfig({ ...modalConfig, isOpen: false });
+    if (wasSuccess) {
+      navigate('/login');
     }
   };
 
@@ -56,6 +83,14 @@ const Register = () => {
           </p>
         </form>
       </div>
+      <Modal 
+        isOpen={modalConfig.isOpen}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onConfirm={handleModalClose}
+        showCancel={false}
+        confirmText={modalConfig.isSuccess ? "Go to Login" : "Fix it"}
+      />
     </div>
   );
 };

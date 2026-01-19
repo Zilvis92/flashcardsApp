@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import api from '../api/client';
+import Modal from './Modal/Modal';
 
 const DeckForm = ({ onDeckCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [sourceLanguage, setSourceLanguage] = useState('English');
   const [targetLanguage, setTargetLanguage] = useState('Lithuanian');
+  const [modalConfig, setModalConfig] = useState({ 
+    isOpen: false, 
+    title: '', 
+    message: '' 
+  });
+
+  const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,7 +30,11 @@ const DeckForm = ({ onDeckCreated }) => {
       onDeckCreated(res.data);
     } catch (err) {
       console.error('Error creating collection:', err.response?.data || err);
-      alert(err.response?.data?.message || 'Failed to create collection');
+      setModalConfig({
+        isOpen: true,
+        title: "Creation Failed",
+        message: err.response?.data?.message || 'Failed to create collection. Please try again later.'
+      });
     }
   };
 
@@ -81,6 +93,14 @@ const DeckForm = ({ onDeckCreated }) => {
           Create Collection
         </button>
       </form>
+      <Modal 
+        isOpen={modalConfig.isOpen}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onConfirm={closeModal}
+        showCancel={false}
+        confirmText="OK"
+      />
     </div>
   );
 };

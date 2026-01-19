@@ -1,20 +1,26 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import Modal from './Modal/Modal';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, title: '', message: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await login(formData.email, formData.password);
-      alert('You have successfully logged in!');
       navigate('/decks');
     } catch (err) {
-      alert('Error logging in');
+      const errorMsg = err.response?.data?.message || 'Invalid email or password. Please try again.';
+      setModalConfig({
+        isOpen: true,
+        title: "Login Failed",
+        message: errorMsg
+      });
     }
   };
 
@@ -47,6 +53,14 @@ const Login = () => {
           </p>
         </form>
       </div>
+      <Modal 
+        isOpen={modalConfig.isOpen}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onConfirm={() => setModalConfig({ ...modalConfig, isOpen: false })}
+        showCancel={false}
+        confirmText="Try Again"
+      />
     </div>
   );
 };

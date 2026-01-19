@@ -4,6 +4,7 @@ import api from '../api/client';
 import Navbar from '../components/Navbar';
 import CardForm from '../components/CardForm';
 import StudyMode from '../components/StudyMode';
+import Modal from '../components/Modal/Modal.jsx';
 
 const DeckDetails = () => {
   const { id } = useParams(); // Get ID from URL
@@ -15,6 +16,25 @@ const DeckDetails = () => {
   const [editData, setEditData] = useState({ front_side: '', back_side: '', hint: '' });
   const [isEditingDeck, setIsEditingDeck] = useState(false);
   const [deckData, setDeckData] = useState({ title: '', description: '' });
+  const [modalConfig, setModalConfig] = useState({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    onConfirm: () => {},
+    showCancel: true 
+  });
+
+const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
+
+const showAlert = (title, message) => {
+    setModalConfig({
+      isOpen: true,
+      title,
+      message,
+      onConfirm: closeModal,
+      showCancel: false
+    });
+  };
 
   useEffect(() => {
     const fetchDeck = async () => {
@@ -38,27 +58,45 @@ const DeckDetails = () => {
     }));
   };
 
-  const handleDeleteCard = async (cardId) => {
-    if (!window.confirm('Are you sure you want to delete this card?')) return;
-    try {
-      await api.delete(`/cards/${cardId}`);
-      setDeck((prev) => ({
-        ...prev,
-        cards: prev.cards.filter(card => card._id !== cardId)
-      }));
-    } catch (err) {
-      alert('Failed to delete card');
-    }
+  const handleDeleteCard = (cardId) => {
+    setModalConfig({
+      isOpen: true,
+      title: "Delete Card",
+      message: "Are you sure you want to delete this card?",
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          await api.delete(`/cards/${cardId}`);
+          setDeck((prev) => ({
+            ...prev,
+            cards: prev.cards.filter(card => card._id !== cardId)
+          }));
+          closeModal();
+        } catch (err) {
+          closeModal();
+          showAlert("Failed to delete card");
+        }
+      }
+    });
   };
 
-  const handleDeleteDeck = async () => {
-    if (!window.confirm('WARNING: Are you sure you want to delete the ENTIRE collection?')) return;
-    try {
-      await api.delete(`/decks/${id}`);
-      navigate('/decks');
-    } catch (err) {
-      alert('Failed to delete collection');
-    }
+  const handleDeleteDeck = () => {
+    setModalConfig({
+      isOpen: true,
+      title: "Danger Zone!",
+      message: "WARNING: Are you sure you want to delete the ENTIRE collection?",
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          await api.delete(`/decks/${id}`);
+          closeModal();
+          navigate('/decks');
+        } catch (err) {
+          closeModal();
+          showAlert("Failed to delete collection");
+        }
+      }
+    });
   };
 
   const startEditing = (card) => {
@@ -75,7 +113,7 @@ const DeckDetails = () => {
       }));
       setEditingCardId(null);
     } catch (err) {
-      alert('Update failed');
+      showAlert('Update failed');
     }
   };
 
@@ -85,20 +123,29 @@ const DeckDetails = () => {
       setDeck(res.data);
       setIsEditingDeck(false);
     } catch (err) {
-      alert('Failed to update collection info');
+      showAlert('Failed to update collection info');
     }
   };
 
   // Function to reset progress
-  const handleResetProgress = async () => {
-    if (!window.confirm('Do you want to reset all cards and study again?')) return;
-    try {
-      const res = await api.post(`/decks/${id}/reset`);
-      setDeck(res.data);
-      alert('Progress reset! You can now study all cards again.');
-    } catch (err) {
-      alert('Failed to reset progress');
-    }
+  const handleResetProgressClick = () => {
+    setModalConfig({
+      isOpen: true,
+      title: "Reset Progress",
+      message: "Do you want to reset all cards and study again?",
+      showCancel: true,
+      onConfirm: async () => {
+        try {
+          const res = await api.post(`/decks/${id}/reset`);
+          setDeck(res.data);
+          closeModal();
+          showAlert("Success", "Progress reset! You can now study all cards again.");
+        } catch (err) {
+          closeModal();
+          showAlert("Error", "Failed to reset progress");
+        }
+      }
+    });
   };
 
   // Function that updates the 'mastered' status of a specific card in the local array
@@ -126,7 +173,7 @@ const DeckDetails = () => {
           
           <div className="nav-links">
             {deck.cards?.length > 0 && (
-              <button onClick={handleResetProgress} className="btn btn-outline">
+              <button onClick={handleResetProgressClick} className="btn btn-outline">
                 Reset Progress 🔄
               </button>
             )}
@@ -180,7 +227,7 @@ const DeckDetails = () => {
           <StudyMode 
             cards={deck.cards} 
             onFinish={() => setIsStudyMode(false)} 
-            onReset={handleResetProgress} 
+            onReset={handleResetProgressClick} 
             onCardStatusChange={updateLocalCardStatus} />
         ) : (
           <>
@@ -235,6 +282,15 @@ const DeckDetails = () => {
             </div>
           </>
         )}
+        <Modal 
+          isOpen={modalConfig.isOpen}
+          title={modalConfig.title}
+          message={modalConfig.message}
+          onConfirm={modalConfig.onConfirm}
+          onCancel={closeModal}
+          showCancel={modalConfig.showCancel}
+          confirmText={modalConfig.showCancel ? "Confirm" : "OK"}
+        />
       </div>
     </>
   );
