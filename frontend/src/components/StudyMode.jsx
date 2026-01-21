@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import api from '../api/client';
 
-const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
+const StudyMode = ({ cards, deckTitle, onFinish, onReset, onCardStatusChange }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const themeClass = `theme-${deckTitle?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  console.log("Sugeneruota klasė:", themeClass);
 
   // We only filter those that have not yet been learned
   const unmasteredCards = cards.filter(card => !card.mastered);
@@ -66,10 +69,10 @@ const StudyMode = ({ cards, onFinish, onReset, onCardStatusChange }) => {
         className={`flashcard-wrapper ${isFlipped ? 'is-flipped' : ''}`} 
         onClick={() => setIsFlipped(!isFlipped)}
       >
-        <div className="card-face">
+        <div className={`card-face card-face-front ${themeClass}`}>
           {currentCard.front_side}
         </div>
-        <div className="card-face card-face-back">
+        <div className={`card-face card-face-back ${themeClass}`}>
           {currentCard.back_side}
         </div>
       </div>

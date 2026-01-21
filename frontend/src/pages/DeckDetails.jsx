@@ -225,7 +225,8 @@ const showAlert = (title, message) => {
 
         {isStudyMode ? (
           <StudyMode 
-            cards={deck.cards} 
+            cards={deck.cards}
+            deckTitle={deck.title} 
             onFinish={() => setIsStudyMode(false)} 
             onReset={handleResetProgressClick} 
             onCardStatusChange={updateLocalCardStatus} />
