@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import api from '../api/client';
+import { launchFireworks, playSuccessSound } from '../utils/effects';
 
 const StudyMode = ({ cards, deckTitle, onFinish, onReset, onCardStatusChange }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
   const themeClass = `theme-${deckTitle?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-  console.log("Sugeneruota klasė:", themeClass);
 
   // We only filter those that have not yet been learned
   const unmasteredCards = cards.filter(card => !card.mastered);
@@ -21,6 +21,9 @@ const StudyMode = ({ cards, deckTitle, onFinish, onReset, onCardStatusChange }) 
   };
 
   const handleNext = () => {
+    if (currentIndex === cardsToDisplay.length - 1) {
+      launchFireworks();
+    }
     setIsFlipped(false);
     setCurrentIndex(currentIndex + 1);
   };
@@ -28,11 +31,16 @@ const StudyMode = ({ cards, deckTitle, onFinish, onReset, onCardStatusChange }) 
   const markAsMastered = async () => {
     const currentCard = cardsToDisplay[currentIndex];
     try {
+      playSuccessSound();
+      
       await api.put(`/cards/${currentCard._id}/mastered`, { mastered: true });
       
-      // We call the parent component function to update the state
       if (onCardStatusChange) {
         onCardStatusChange(currentCard._id, true);
+      }
+
+      if (currentIndex === cardsToDisplay.length - 1) {
+        launchFireworks();
       }
       
       handleNext();
@@ -62,7 +70,7 @@ const StudyMode = ({ cards, deckTitle, onFinish, onReset, onCardStatusChange }) 
     <div className="study-container">
       <div className="progress-bar">
         Card {currentIndex + 1} from {cardsToDisplay.length}
-        {unmasteredCards.length === 0 && "(View mode)"}
+        {unmasteredCards.length === 0 && " (Review mode)"}
       </div>
 
       <div 
